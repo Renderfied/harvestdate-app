@@ -463,7 +463,25 @@
             try {
                 map = new google.maps.Map(document.getElementById('map'), {
                     center: { lat: 47.2529, lng: -122.4443 },
-                    zoom: 10
+                    zoom: 10,
+                    zoomControl: true,
+                    zoomControlOptions: {
+                        position: google.maps.ControlPosition.RIGHT_CENTER
+                    },
+                    mapTypeControl: true,
+                    mapTypeControlOptions: {
+                        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                        position: google.maps.ControlPosition.TOP_CENTER
+                    },
+                    scaleControl: true,
+                    streetViewControl: true,
+                    streetViewControlOptions: {
+                        position: google.maps.ControlPosition.RIGHT_TOP
+                    },
+                    fullscreenControl: true,
+                    gestureHandling: 'greedy',
+                    minZoom: 3,
+                    maxZoom: 18
                 });
                 mapsLoaded = true;
                 displayProductsOnMap(products);

@@ -15,27 +15,24 @@
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
             color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+            background: #f5f5f5;
+            height: 100vh;
+            overflow: hidden;
         }
 
         header {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
             padding: 1rem 0;
             box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            position: relative;
+            z-index: 1000;
         }
 
         .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -139,90 +136,96 @@
             background: #c53030;
         }
 
-        main {
-            padding: 2rem 0;
+        .btn-success {
+            background: #27ae60;
         }
 
-        .hero {
-            text-align: center;
-            color: white;
-            margin-bottom: 3rem;
+        .btn-success:hover {
+            background: #229954;
         }
 
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        }
-
-        .marketplace {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        .marketplace-header {
+        .main-content {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
+            height: calc(100vh - 80px);
         }
 
-        .add-listing-btn {
+        .map-container {
+            flex: 1;
+            position: relative;
+            background: #e8f5e8;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 50%, #ffd3a5 100%);
+        }
+
+        .map-controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .sidebar {
+            width: 400px;
+            background: white;
+            border-left: 1px solid #ddd;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            background: #f8f9fa;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            padding: 1rem;
+        }
+
+        .listing-details {
             display: none;
         }
 
-        .add-listing-btn.show {
-            display: inline-block;
+        .default-content {
+            text-align: center;
+            color: #666;
+            padding: 2rem;
         }
 
-        .listings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .listing {
+        .listing-card {
             background: white;
             border-radius: 10px;
             padding: 1.5rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-            position: relative;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 2px solid transparent;
         }
 
-        .listing:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        .listing-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         }
 
-        .listing-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #667eea;
-            color: white;
-            padding: 0.3rem 0.6rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: bold;
+        .listing-card.selected {
+            border: 2px solid #667eea;
+            background: #f0f4ff;
         }
 
-        .listing h3 {
+        .listing-card h3 {
             color: #2c3e50;
             margin-bottom: 0.5rem;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
         }
 
         .listing-info {
@@ -240,10 +243,10 @@
         }
 
         .price {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
             color: #27ae60;
-            margin: 1rem 0;
+            margin: 0.5rem 0;
         }
 
         .contact-info {
@@ -261,7 +264,7 @@
         .message {
             padding: 1rem;
             border-radius: 5px;
-            margin: 1rem 0;
+            margin: 1rem;
             text-align: center;
         }
 
@@ -277,113 +280,33 @@
             border: 1px solid #f5c6cb;
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #666;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-
-        .form-group input, .form-group textarea, .form-group select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
         @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 40vh;
+                border-left: none;
+                border-top: 1px solid #ddd;
+            }
+            
+            .map-container {
+                height: 60vh;
+            }
+            
             .header-content {
                 flex-direction: column;
                 text-align: center;
             }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .marketplace-header {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .listings-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
+            
             .auth-forms {
                 flex-direction: column;
                 align-items: stretch;
                 width: 100%;
             }
-
+            
             .auth-form {
                 justify-content: center;
             }
@@ -392,217 +315,351 @@
 </head>
 <body>
     <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">HarvestDate</div>
+        <div class="header-content">
+            <div class="logo">HarvestDate</div>
+            
+            <div class="auth-section">
+                <!-- User info (shown when logged in) -->
+                <div class="user-info" id="userInfo">
+                    <span>👋 Welcome, <span id="userName"></span>!</span>
+                    <button class="btn btn-danger" onclick="signOut()">Sign Out</button>
+                </div>
                 
-                <div class="auth-section">
-                    <!-- User info (shown when logged in) -->
-                    <div class="user-info" id="userInfo">
-                        <span>👋 Welcome, <span id="userName"></span>!</span>
-                        <button class="btn btn-danger" onclick="signOut()">Sign Out</button>
+                <!-- Auth forms (shown when logged out) -->
+                <div class="auth-forms" id="authForms">
+                    <!-- Sign Up Form -->
+                    <div class="auth-form">
+                        <input type="text" id="signupName" placeholder="Full Name" required>
+                        <input type="email" id="signupEmail" placeholder="Email" required>
+                        <input type="password" id="signupPassword" placeholder="Password" required>
+                        <button class="btn" onclick="signUp()">Sign Up</button>
                     </div>
                     
-                    <!-- Auth forms (shown when logged out) -->
-                    <div class="auth-forms" id="authForms">
-                        <!-- Sign Up Form -->
-                        <div class="auth-form">
-                            <input type="text" id="signupName" placeholder="Full Name" required>
-                            <input type="email" id="signupEmail" placeholder="Email" required>
-                            <input type="password" id="signupPassword" placeholder="Password" required>
-                            <button class="btn" onclick="signUp()">Sign Up</button>
-                        </div>
-                        
-                        <!-- Sign In Form -->
-                        <div class="auth-form">
-                            <input type="email" id="signinEmail" placeholder="Email" required>
-                            <input type="password" id="signinPassword" placeholder="Password" required>
-                            <button class="btn btn-secondary" onclick="signIn()">Sign In</button>
-                        </div>
+                    <!-- Sign In Form -->
+                    <div class="auth-form">
+                        <input type="email" id="signinEmail" placeholder="Email" required>
+                        <input type="password" id="signinPassword" placeholder="Password" required>
+                        <button class="btn btn-secondary" onclick="signIn()">Sign In</button>
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <main>
-        <div class="container">
-            <div class="hero">
-                <h1>Fresh Produce Marketplace</h1>
-                <p>Connect directly with local farmers and get the freshest produce delivered to your door</p>
+    <div id="messages"></div>
+
+    <div class="main-content">
+        <div class="map-container">
+            <div class="map-controls">
+                <button class="btn btn-success" id="addListingBtn" onclick="showAddListingModal()" style="display: none;">
+                    🌱 Add Farm Listing
+                </button>
+                <select id="categoryFilter" class="btn" style="background: white; color: #333; border: 2px solid #667eea;">
+                    <option value="">All Categories</option>
+                    <option value="vegetables">🥬 Vegetables</option>
+                    <option value="fruits">🍎 Fruits</option>
+                    <option value="herbs">🌿 Herbs</option>
+                    <option value="grains">🌾 Grains</option>
+                    <option value="dairy">🥛 Dairy</option>
+                    <option value="other">🌱 Other</option>
+                </select>
             </div>
-
-            <div class="marketplace">
-                <div class="marketplace-header">
-                    <h2>Available Produce</h2>
-                    <button class="btn add-listing-btn" id="addListingBtn" onclick="showAddListingModal()">
-                        + Add Listing
-                    </button>
-                </div>
-
-                <div id="messages"></div>
-                
-                <div class="listings-grid" id="listingsGrid">
-                    <!-- Sample listings -->
-                    <div class="listing">
-                        <h3>🍅 Fresh Tomatoes</h3>
-                        <div class="listing-info">
-                            <div class="info-item">📍 Seattle, WA</div>
-                            <div class="info-item">📦 50 lbs available</div>
-                            <div class="info-item">📅 Harvested yesterday</div>
-                            <div class="info-item">🚛 Local delivery</div>
-                        </div>
-                        <div class="price">$3.50 per lb</div>
-                        <p style="margin: 1rem 0; color: #666;">Organically grown vine-ripened tomatoes. Perfect for sauces, salads, or fresh eating.</p>
-                        <div class="contact-info">
-                            <h4>Contact Farmer</h4>
-                            <p>📞 (206) 555-0123</p>
-                            <p>✉️ tomatoes@freshfarm.com</p>
-                        </div>
-                    </div>
-
-                    <div class="listing">
-                        <h3>🥬 Organic Lettuce</h3>
-                        <div class="listing-info">
-                            <div class="info-item">📍 Tacoma, WA</div>
-                            <div class="info-item">📦 25 heads available</div>
-                            <div class="info-item">📅 Harvested today</div>
-                            <div class="info-item">🥬 Buttercrunch variety</div>
-                        </div>
-                        <div class="price">$2.00 per head</div>
-                        <p style="margin: 1rem 0; color: #666;">Crisp, organic buttercrunch lettuce. No pesticides, grown in rich Pacific Northwest soil.</p>
-                        <div class="contact-info">
-                            <h4>Contact Farmer</h4>
-                            <p>📞 (253) 555-0456</p>
-                            <p>✉️ greens@organicvalley.com</p>
-                        </div>
-                    </div>
-
-                    <div class="listing">
-                        <h3>🥕 Rainbow Carrots</h3>
-                        <div class="listing-info">
-                            <div class="info-item">📍 Spokane, WA</div>
-                            <div class="info-item">📦 30 bunches</div>
-                            <div class="info-item">📅 Harvested 2 days ago</div>
-                            <div class="info-item">🌈 Purple, orange, yellow</div>
-                        </div>
-                        <div class="price">$4.00 per bunch</div>
-                        <p style="margin: 1rem 0; color: #666;">Beautiful rainbow carrots with tops included. Great for roasting, salads, or juicing.</p>
-                        <div class="contact-info">
-                            <h4>Contact Farmer</h4>
-                            <p>📞 (509) 555-0789</p>
-                            <p>✉️ rainbow@rootfarm.com</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div id="map"></div>
         </div>
-    </main>
-
-    <!-- Add Listing Modal -->
-    <div class="modal" id="addListingModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add New Listing</h3>
-                <button class="close-btn" onclick="hideAddListingModal()">&times;</button>
+        
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>🗺️ Local Fresh Produce</h2>
+                <p id="mapStatus">Initializing map...</p>
             </div>
             
-            <form id="addListingForm">
-                <div class="form-group">
-                    <label for="productName">Product Name *</label>
-                    <input type="text" id="productName" required>
+            <div class="sidebar-content">
+                <div class="default-content" id="defaultContent">
+                    <h3>Welcome to HarvestDate!</h3>
+                    <p>🌱 Discover fresh, local produce from farms in your area</p>
+                    <p>📍 Click on the map pins to see what's available</p>
+                    <p>🛒 Connect directly with local farmers</p>
+                    <br>
+                    <div id="allListings"></div>
                 </div>
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="category">Category *</label>
-                        <select id="category" required>
-                            <option value="">Select Category</option>
-                            <option value="vegetables">Vegetables</option>
-                            <option value="fruits">Fruits</option>
-                            <option value="herbs">Herbs</option>
-                            <option value="grains">Grains</option>
-                            <option value="dairy">Dairy</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="price">Price per Unit *</label>
-                        <input type="number" id="price" step="0.01" min="0" required>
-                    </div>
+                <div class="listing-details" id="listingDetails">
+                    <!-- Selected listing details will appear here -->
                 </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="quantity">Available Quantity *</label>
-                        <input type="number" id="quantity" min="1" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="unit">Unit *</label>
-                        <select id="unit" required>
-                            <option value="">Select Unit</option>
-                            <option value="lbs">Pounds (lbs)</option>
-                            <option value="kg">Kilograms (kg)</option>
-                            <option value="pieces">Pieces</option>
-                            <option value="bunches">Bunches</option>
-                            <option value="boxes">Boxes</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea id="description" placeholder="Tell buyers about your produce..."></textarea>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="location">Location *</label>
-                        <input type="text" id="location" placeholder="City, State" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="harvestDate">Harvest Date</label>
-                        <input type="date" id="harvestDate">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="contactPhone">Phone Number *</label>
-                        <input type="tel" id="contactPhone" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="contactEmail">Contact Email *</label>
-                        <input type="email" id="contactEmail" required>
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
-                    Add Listing
-                </button>
-            </form>
+            </div>
         </div>
     </div>
 
     <script>
-        // Simple demo authentication (no external dependencies)
+        // Global variables
         let currentUser = null;
-        let users = []; // Simple in-memory user storage for demo
+        let users = [];
+        let map = null;
+        let markers = [];
+        let listings = [];
 
-        // Initialize on page load
+        // Sample farm listings
+        const sampleListings = [
+            {
+                id: 1,
+                productName: "Fresh Organic Tomatoes",
+                category: "vegetables",
+                price: 3.50,
+                quantity: 50,
+                unit: "lbs",
+                description: "Vine-ripened organic tomatoes, perfect for sauces, salads, or fresh eating.",
+                farmLocation: "Sunset Valley Farm, Seattle, WA",
+                latitude: 47.6062,
+                longitude: -122.3321,
+                harvestDate: "2024-12-17",
+                contactPhone: "(206) 555-0123",
+                contactEmail: "tomatoes@sunsetvalley.com",
+                owner: "Mike Thompson",
+                emoji: "🍅"
+            },
+            {
+                id: 2,
+                productName: "Buttercrunch Lettuce",
+                category: "vegetables",
+                price: 2.00,
+                quantity: 25,
+                unit: "heads",
+                description: "Crisp, organic buttercrunch lettuce. No pesticides, grown in rich Pacific Northwest soil.",
+                farmLocation: "Green Acres, Tacoma, WA",
+                latitude: 47.2529,
+                longitude: -122.4443,
+                harvestDate: "2024-12-18",
+                contactPhone: "(253) 555-0456",
+                contactEmail: "greens@greenacres.com",
+                owner: "Sarah Johnson",
+                emoji: "🥬"
+            },
+            {
+                id: 3,
+                productName: "Rainbow Carrots",
+                category: "vegetables",
+                price: 4.00,
+                quantity: 30,
+                unit: "bunches",
+                description: "Beautiful rainbow carrots in purple, orange, and yellow varieties.",
+                farmLocation: "Heritage Farm, Spokane, WA",
+                latitude: 47.6588,
+                longitude: -117.4260,
+                harvestDate: "2024-12-16",
+                contactPhone: "(509) 555-0789",
+                contactEmail: "rainbow@heritagefarm.com",
+                owner: "David Wilson",
+                emoji: "🥕"
+            }
+        ];
+
+        // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('HarvestDate loaded successfully!');
+            console.log('HarvestDate loading...');
+            
+            // Load sample data and setup UI
+            listings = [...sampleListings];
+            displayAllListings();
             updateUIForLoggedOutUser();
+            setupCategoryFilter();
+            
+            // Update status
+            document.getElementById('mapStatus').textContent = 'Waiting for Google Maps...';
         });
 
-        // Sign up function (demo version)
-        function signUp() {
-            console.log('Sign up clicked');
+        // This function will be called by Google Maps when ready
+        window.initMap = function() {
+            console.log('Google Maps API loaded, initializing map...');
             
+            try {
+                // Create the map
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: 47.5, lng: -120.5 },
+                    zoom: 7,
+                    mapTypeControl: true,
+                    streetViewControl: false,
+                    fullscreenControl: true,
+                    styles: [
+                        {
+                            featureType: "all",
+                            elementType: "geometry.fill",
+                            stylers: [{ color: "#f4f4f4" }]
+                        }
+                    ]
+                });
+
+                console.log('Map created successfully');
+                document.getElementById('mapStatus').textContent = 'Click on map pins to view farm details';
+                
+                // Add markers
+                addMarkersToMap();
+                
+            } catch (error) {
+                console.error('Error creating map:', error);
+                document.getElementById('mapStatus').textContent = 'Map error - browse listings below';
+            }
+        };
+
+        // Add markers to Google Maps
+        function addMarkersToMap() {
+            if (!map) {
+                console.log('Map not ready yet');
+                return;
+            }
+
+            console.log('Adding markers to map...');
+
+            // Clear existing markers
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+
+            // Get filtered listings
+            const filteredListings = getFilteredListings();
+
+            filteredListings.forEach(listing => {
+                const marker = new google.maps.Marker({
+                    position: { lat: listing.latitude, lng: listing.longitude },
+                    map: map,
+                    title: listing.productName,
+                    icon: {
+                        url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+                            <svg width="40" height="50" viewBox="0 0 40 50" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 0C8.95 0 0 8.95 0 20c0 15 20 30 20 30s20-15 20-30C40 8.95 31.05 0 20 0z" fill="#27ae60"/>
+                                <circle cx="20" cy="20" r="12" fill="white"/>
+                                <text x="20" y="26" text-anchor="middle" font-size="16">${listing.emoji}</text>
+                            </svg>
+                        `)}`,
+                        scaledSize: new google.maps.Size(40, 50)
+                    }
+                });
+
+                const infoWindow = new google.maps.InfoWindow({
+                    content: `
+                        <div style="max-width: 250px; text-align: center;">
+                            <h3 style="margin: 0 0 8px 0; color: #2c3e50;">${listing.emoji} ${listing.productName}</h3>
+                            <div style="font-weight: bold; color: #27ae60; font-size: 1.1rem; margin: 5px 0;">$${listing.price} per ${listing.unit}</div>
+                            <div style="margin: 5px 0; font-size: 0.9rem;">📦 ${listing.quantity} ${listing.unit} available</div>
+                            <div style="margin: 5px 0; font-size: 0.9rem;">📍 ${listing.farmLocation}</div>
+                            <button onclick="selectListing(${listing.id})" 
+                                    style="background: #667eea; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin-top: 8px; width: 100%;">
+                                View Details
+                            </button>
+                        </div>
+                    `
+                });
+
+                marker.addListener('click', () => {
+                    // Close all other info windows
+                    markers.forEach(m => m.infoWindow && m.infoWindow.close());
+                    
+                    infoWindow.open(map, marker);
+                    selectListing(listing.id);
+                });
+
+                marker.infoWindow = infoWindow;
+                markers.push(marker);
+            });
+
+            console.log(`Added ${markers.length} markers to map`);
+        }
+
+        // Select a listing by ID
+        function selectListing(listingId) {
+            const listing = listings.find(l => l.id === listingId);
+            if (!listing) return;
+
+            console.log('Selected listing:', listing.productName);
+
+            document.getElementById('defaultContent').style.display = 'none';
+            document.getElementById('listingDetails').style.display = 'block';
+            
+            document.getElementById('listingDetails').innerHTML = `
+                <button onclick="showAllListings()" class="btn btn-secondary" style="margin-bottom: 1rem;">
+                    ← Back to All Listings
+                </button>
+                
+                <div class="listing-card selected">
+                    <h3>${listing.emoji} ${listing.productName}</h3>
+                    <div class="price">$${listing.price} per ${listing.unit}</div>
+                    
+                    <div class="listing-info">
+                        <div class="info-item">📍 ${listing.farmLocation}</div>
+                        <div class="info-item">📦 ${listing.quantity} ${listing.unit} available</div>
+                        <div class="info-item">📅 Harvested ${formatDate(listing.harvestDate)}</div>
+                        <div class="info-item">👨‍🌾 ${listing.owner}</div>
+                    </div>
+                    
+                    <p style="margin: 1rem 0; color: #666; line-height: 1.6;">
+                        ${listing.description}
+                    </p>
+                    
+                    <div class="contact-info">
+                        <h4>Contact Farmer</h4>
+                        <p>📞 ${listing.contactPhone}</p>
+                        <p>✉️ ${listing.contactEmail}</p>
+                    </div>
+                </div>
+            `;
+
+            // Center map on selected listing
+            if (map) {
+                map.setCenter({ lat: listing.latitude, lng: listing.longitude });
+                map.setZoom(12);
+            }
+        }
+
+        // Show all listings
+        function showAllListings() {
+            document.getElementById('defaultContent').style.display = 'block';
+            document.getElementById('listingDetails').style.display = 'none';
+            
+            // Reset map view
+            if (map) {
+                map.setCenter({ lat: 47.5, lng: -120.5 });
+                map.setZoom(7);
+            }
+        }
+
+        // Display all listings in sidebar
+        function displayAllListings() {
+            const container = document.getElementById('allListings');
+            const filteredListings = getFilteredListings();
+            
+            container.innerHTML = filteredListings.map(listing => `
+                <div class="listing-card" onclick="selectListing(${listing.id})">
+                    <h3>${listing.emoji} ${listing.productName}</h3>
+                    <div class="price">$${listing.price} per ${listing.unit}</div>
+                    <div class="listing-info">
+                        <div class="info-item">📍 ${listing.farmLocation}</div>
+                        <div class="info-item">📦 ${listing.quantity} ${listing.unit}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Get filtered listings
+        function getFilteredListings() {
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            if (!categoryFilter) return listings;
+            return listings.filter(listing => listing.category === categoryFilter);
+        }
+
+        // Setup category filter
+        function setupCategoryFilter() {
+            document.getElementById('categoryFilter').addEventListener('change', function() {
+                displayAllListings();
+                if (map) addMarkersToMap();
+            });
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString();
+        }
+
+        // Authentication functions (keeping all working code)
+        function signUp() {
             const name = document.getElementById('signupName').value.trim();
             const email = document.getElementById('signupEmail').value.trim();
             const password = document.getElementById('signupPassword').value;
@@ -617,13 +674,11 @@
                 return;
             }
 
-            // Check if user already exists
             if (users.find(user => user.email === email)) {
                 showMessage('An account with this email already exists', 'error');
                 return;
             }
 
-            // Create new user
             const newUser = {
                 id: Date.now(),
                 name: name,
@@ -634,7 +689,6 @@
             users.push(newUser);
             showMessage('Account created successfully! You can now sign in.', 'success');
             
-            // Clear form
             document.getElementById('signupName').value = '';
             document.getElementById('signupEmail').value = '';
             document.getElementById('signupPassword').value = '';
@@ -642,10 +696,7 @@
             console.log('Demo user created:', newUser);
         }
 
-        // Sign in function (demo version)
         function signIn() {
-            console.log('Sign in clicked');
-            
             const email = document.getElementById('signinEmail').value.trim();
             const password = document.getElementById('signinPassword').value;
 
@@ -654,7 +705,6 @@
                 return;
             }
 
-            // Find user
             const user = users.find(u => u.email === email && u.password === password);
 
             if (!user) {
@@ -662,62 +712,49 @@
                 return;
             }
 
-            // Log in user
             currentUser = user;
             showMessage('Welcome back, ' + user.name + '!', 'success');
             updateUIForLoggedInUser();
             
-            // Clear form
             document.getElementById('signinEmail').value = '';
             document.getElementById('signinPassword').value = '';
-
-            console.log('Demo user signed in:', user);
         }
 
-        // Sign out function
         function signOut() {
             currentUser = null;
             showMessage('Successfully signed out', 'success');
             updateUIForLoggedOutUser();
-            console.log('User signed out');
         }
 
-        // Update UI for logged-in user
         function updateUIForLoggedInUser() {
             const userInfo = document.getElementById('userInfo');
             const authForms = document.getElementById('authForms');
             const addListingBtn = document.getElementById('addListingBtn');
             const userName = document.getElementById('userName');
 
-            // Show user info and hide auth forms
             userInfo.classList.add('show');
             authForms.classList.add('hide');
-            addListingBtn.classList.add('show');
+            addListingBtn.style.display = 'inline-block';
 
-            // Set user name
             if (currentUser) {
                 userName.textContent = currentUser.name;
             }
         }
 
-        // Update UI for logged-out user
         function updateUIForLoggedOutUser() {
             const userInfo = document.getElementById('userInfo');
             const authForms = document.getElementById('authForms');
             const addListingBtn = document.getElementById('addListingBtn');
 
-            // Hide user info and show auth forms
             userInfo.classList.remove('show');
             authForms.classList.remove('hide');
-            addListingBtn.classList.remove('show');
+            addListingBtn.style.display = 'none';
         }
 
-        // Show message function
         function showMessage(message, type = 'info') {
             const messagesDiv = document.getElementById('messages');
             messagesDiv.innerHTML = `<div class="message ${type}">${message}</div>`;
             
-            // Auto-hide success messages after 5 seconds
             if (type === 'success') {
                 setTimeout(() => {
                     messagesDiv.innerHTML = '';
@@ -725,56 +762,18 @@
             }
         }
 
-        // Modal functions
         function showAddListingModal() {
             if (!currentUser) {
                 showMessage('Please sign in to add a listing', 'error');
                 return;
             }
-            document.getElementById('addListingModal').classList.add('show');
+            alert('Add listing feature coming soon!');
         }
+    </script>
 
-        function hideAddListingModal() {
-            document.getElementById('addListingModal').classList.remove('show');
-            document.getElementById('addListingForm').reset();
-        }
-
-        // Add listing form submission
-        document.getElementById('addListingForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            if (!currentUser) {
-                showMessage('Please sign in to add a listing', 'error');
-                return;
-            }
-
-            // Get form data
-            const formData = {
-                productName: document.getElementById('productName').value,
-                category: document.getElementById('category').value,
-                price: document.getElementById('price').value,
-                quantity: document.getElementById('quantity').value,
-                unit: document.getElementById('unit').value,
-                description: document.getElementById('description').value,
-                location: document.getElementById('location').value,
-                harvestDate: document.getElementById('harvestDate').value,
-                contactPhone: document.getElementById('contactPhone').value,
-                contactEmail: document.getElementById('contactEmail').value,
-                owner: currentUser.name
-            };
-
-            // In a real app, you'd save this to a database
-            console.log('New listing (demo):', formData);
-            showMessage('Listing added successfully! (Demo mode)', 'success');
-            hideAddListingModal();
-        });
-
-        // Close modal when clicking outside
-        document.getElementById('addListingModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                hideAddListingModal();
-            }
-        });
+    <!-- Google Maps API - This should work if the API is enabled -->
+    <script async defer 
+        src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
     </script>
 </body>
 </html>

@@ -424,7 +424,8 @@
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJneW9vbmtmenJqYmlucGdsaWhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ4OTI4NTEsImV4cCI6MjA1MDQ2ODg1MX0.g7k8LzPHo1SbVmFQxYCxuKJgqG_RhzF8Rt_TQCUaD2w';
         
         // Create Supabase client
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        const { createClient } = supabase;
+        const supabaseClient = createClient(supabaseUrl, supabaseKey);
         
         let currentUser = null;
 
@@ -437,7 +438,7 @@
         // Check current authentication state
         async function checkAuthState() {
             try {
-                const { data: { session }, error } = await supabase.auth.getSession();
+                const { data: { session }, error } = await supabaseClient.auth.getSession();
                 
                 if (error) {
                     console.error('Auth error:', error);
@@ -456,7 +457,7 @@
             }
 
             // Listen for auth changes
-            supabase.auth.onAuthStateChange((event, session) => {
+            supabaseClient.auth.onAuthStateChange((event, session) => {
                 console.log('Auth state changed:', event);
                 
                 if (session) {
@@ -490,7 +491,7 @@
             try {
                 console.log('Attempting to sign up user...');
                 
-                const { data, error } = await supabase.auth.signUp({
+                const { data, error } = await supabaseClient.auth.signUp({
                     email: email,
                     password: password,
                     options: {
@@ -533,7 +534,7 @@
             try {
                 console.log('Attempting to sign in user...');
                 
-                const { data, error } = await supabase.auth.signInWithPassword({
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
@@ -558,7 +559,7 @@
         // Sign out function
         async function signOut() {
             try {
-                const { error } = await supabase.auth.signOut();
+                const { error } = await supabaseClient.auth.signOut();
                 
                 if (error) {
                     console.error('Signout error:', error);

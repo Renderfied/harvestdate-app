@@ -444,7 +444,57 @@
                 <div id="messages"></div>
                 
                 <div class="listings-grid" id="listingsGrid">
-                    <!-- Listings will be loaded here -->
+                    <!-- Sample listings will be shown here -->
+                    <div class="listing">
+                        <h3>🍅 Fresh Tomatoes</h3>
+                        <div class="listing-info">
+                            <div class="info-item">📍 Seattle, WA</div>
+                            <div class="info-item">📦 50 lbs available</div>
+                            <div class="info-item">📅 Harvested yesterday</div>
+                            <div class="info-item">🚛 Local delivery</div>
+                        </div>
+                        <div class="price">$3.50 per lb</div>
+                        <p style="margin: 1rem 0; color: #666;">Organically grown vine-ripened tomatoes. Perfect for sauces, salads, or fresh eating.</p>
+                        <div class="contact-info">
+                            <h4>Contact Farmer</h4>
+                            <p>📞 (206) 555-0123</p>
+                            <p>✉️ tomatoes@freshfarm.com</p>
+                        </div>
+                    </div>
+
+                    <div class="listing">
+                        <h3>🥬 Organic Lettuce</h3>
+                        <div class="listing-info">
+                            <div class="info-item">📍 Tacoma, WA</div>
+                            <div class="info-item">📦 25 heads available</div>
+                            <div class="info-item">📅 Harvested today</div>
+                            <div class="info-item">🥬 Buttercrunch variety</div>
+                        </div>
+                        <div class="price">$2.00 per head</div>
+                        <p style="margin: 1rem 0; color: #666;">Crisp, organic buttercrunch lettuce. No pesticides, grown in rich Pacific Northwest soil.</p>
+                        <div class="contact-info">
+                            <h4>Contact Farmer</h4>
+                            <p>📞 (253) 555-0456</p>
+                            <p>✉️ greens@organicvalley.com</p>
+                        </div>
+                    </div>
+
+                    <div class="listing">
+                        <h3>🥕 Rainbow Carrots</h3>
+                        <div class="listing-info">
+                            <div class="info-item">📍 Spokane, WA</div>
+                            <div class="info-item">📦 30 bunches</div>
+                            <div class="info-item">📅 Harvested 2 days ago</div>
+                            <div class="info-item">🌈 Purple, orange, yellow</div>
+                        </div>
+                        <div class="price">$4.00 per bunch</div>
+                        <p style="margin: 1rem 0; color: #666;">Beautiful rainbow carrots with tops included. Great for roasting, salads, or juicing.</p>
+                        <div class="contact-info">
+                            <h4>Contact Farmer</h4>
+                            <p>📞 (509) 555-0789</p>
+                            <p>✉️ rainbow@rootfarm.com</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -566,9 +616,6 @@
                 updateUIForLoggedOutUser();
             }
             
-            // Load listings
-            loadListings();
-            
             // Listen for auth changes
             supabase.auth.onAuthStateChange((event, session) => {
                 console.log('Auth state changed:', event, session);
@@ -677,3 +724,103 @@
                     showMessage('Successfully signed out', 'success');
                 }
             } catch (err) {
+                console.error('Unexpected error during signout:', err);
+                showMessage('An unexpected error occurred. Please try again.', 'error');
+            }
+        }
+
+        // Update UI for logged-in user
+        function updateUIForLoggedInUser() {
+            const userInfo = document.getElementById('userInfo');
+            const authForms = document.getElementById('authForms');
+            const addListingBtn = document.getElementById('addListingBtn');
+            const userName = document.getElementById('userName');
+
+            // Show user info and hide auth forms
+            userInfo.classList.add('show');
+            authForms.classList.add('hide');
+            addListingBtn.classList.add('show');
+
+            // Set user name
+            if (currentUser && currentUser.user_metadata && currentUser.user_metadata.full_name) {
+                userName.textContent = currentUser.user_metadata.full_name;
+            } else if (currentUser && currentUser.email) {
+                userName.textContent = currentUser.email.split('@')[0];
+            } else {
+                userName.textContent = 'User';
+            }
+        }
+
+        // Update UI for logged-out user
+        function updateUIForLoggedOutUser() {
+            const userInfo = document.getElementById('userInfo');
+            const authForms = document.getElementById('authForms');
+            const addListingBtn = document.getElementById('addListingBtn');
+
+            // Hide user info and show auth forms
+            userInfo.classList.remove('show');
+            authForms.classList.remove('hide');
+            addListingBtn.classList.remove('show');
+        }
+
+        // Show message function
+        function showMessage(message, type = 'info') {
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML = `<div class="message ${type}">${message}</div>`;
+            
+            // Auto-hide success messages after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    messagesDiv.innerHTML = '';
+                }, 5000);
+            }
+        }
+
+        // Modal functions
+        function showAddListingModal() {
+            document.getElementById('addListingModal').classList.add('show');
+        }
+
+        function hideAddListingModal() {
+            document.getElementById('addListingModal').classList.remove('show');
+            document.getElementById('addListingForm').reset();
+        }
+
+        // Add listing form submission
+        document.getElementById('addListingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                showMessage('Please sign in to add a listing', 'error');
+                return;
+            }
+
+            // Get form data
+            const formData = {
+                productName: document.getElementById('productName').value,
+                category: document.getElementById('category').value,
+                price: document.getElementById('price').value,
+                quantity: document.getElementById('quantity').value,
+                unit: document.getElementById('unit').value,
+                description: document.getElementById('description').value,
+                location: document.getElementById('location').value,
+                harvestDate: document.getElementById('harvestDate').value,
+                contactPhone: document.getElementById('contactPhone').value,
+                contactEmail: document.getElementById('contactEmail').value
+            };
+
+            // For now, just show a success message
+            // In a real app, you'd save this to your database
+            showMessage('Listing added successfully! (Demo mode - not actually saved)', 'success');
+            hideAddListingModal();
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('addListingModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideAddListingModal();
+            }
+        });
+    </script>
+</body>
+</html>

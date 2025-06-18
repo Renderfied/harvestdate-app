@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HarvestDate - Fresh Produce Marketplace</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/supabase/2.39.0/umd/supabase.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -278,6 +277,84 @@
             border: 1px solid #f5c6cb;
         }
 
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -294,6 +371,10 @@
             }
 
             .listings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
                 grid-template-columns: 1fr;
             }
 
@@ -354,8 +435,8 @@
             <div class="marketplace">
                 <div class="marketplace-header">
                     <h2>Available Produce</h2>
-                    <button class="btn add-listing-btn" id="addListingBtn">
-                        + Add Listing (Sign in required)
+                    <button class="btn add-listing-btn" id="addListingBtn" onclick="showAddListingModal()">
+                        + Add Listing
                     </button>
                 </div>
 
@@ -418,60 +499,108 @@
         </div>
     </main>
 
-    <script>
-        // Initialize Supabase with your actual credentials
-        const supabaseUrl = 'https://bgyoonkfzrjbiypglihm.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJneW9vbmtmenJqYmlucGdsaWhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ4OTI4NTEsImV4cCI6MjA1MDQ2ODg1MX0.g7k8LzPHo1SbVmFQxYCxuKJgqG_RhzF8Rt_TQCUaD2w';
-        
-        // Create Supabase client
-        const { createClient } = supabase;
-        const supabaseClient = createClient(supabaseUrl, supabaseKey);
-        
-        let currentUser = null;
+    <!-- Add Listing Modal -->
+    <div class="modal" id="addListingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Listing</h3>
+                <button class="close-btn" onclick="hideAddListingModal()">&times;</button>
+            </div>
+            
+            <form id="addListingForm">
+                <div class="form-group">
+                    <label for="productName">Product Name *</label>
+                    <input type="text" id="productName" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="category">Category *</label>
+                        <select id="category" required>
+                            <option value="">Select Category</option>
+                            <option value="vegetables">Vegetables</option>
+                            <option value="fruits">Fruits</option>
+                            <option value="herbs">Herbs</option>
+                            <option value="grains">Grains</option>
+                            <option value="dairy">Dairy</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="price">Price per Unit *</label>
+                        <input type="number" id="price" step="0.01" min="0" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="quantity">Available Quantity *</label>
+                        <input type="number" id="quantity" min="1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="unit">Unit *</label>
+                        <select id="unit" required>
+                            <option value="">Select Unit</option>
+                            <option value="lbs">Pounds (lbs)</option>
+                            <option value="kg">Kilograms (kg)</option>
+                            <option value="pieces">Pieces</option>
+                            <option value="bunches">Bunches</option>
+                            <option value="boxes">Boxes</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" placeholder="Tell buyers about your produce..."></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="location">Location *</label>
+                        <input type="text" id="location" placeholder="City, State" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="harvestDate">Harvest Date</label>
+                        <input type="date" id="harvestDate">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contactPhone">Phone Number *</label>
+                        <input type="tel" id="contactPhone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactEmail">Contact Email *</label>
+                        <input type="email" id="contactEmail" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                    Add Listing
+                </button>
+            </form>
+        </div>
+    </div>
 
-        // Wait for page to load
+    <script>
+        // Simple demo authentication (no external dependencies)
+        let currentUser = null;
+        let users = []; // Simple in-memory user storage for demo
+
+        // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Page loaded, initializing...');
-            checkAuthState();
+            console.log('HarvestDate loaded successfully!');
+            updateUIForLoggedOutUser();
         });
 
-        // Check current authentication state
-        async function checkAuthState() {
-            try {
-                const { data: { session }, error } = await supabaseClient.auth.getSession();
-                
-                if (error) {
-                    console.error('Auth error:', error);
-                    showMessage('Authentication error: ' + error.message, 'error');
-                } else if (session) {
-                    console.log('User is logged in:', session.user);
-                    currentUser = session.user;
-                    updateUIForLoggedInUser();
-                } else {
-                    console.log('No active session');
-                    updateUIForLoggedOutUser();
-                }
-            } catch (err) {
-                console.error('Error checking auth:', err);
-                showMessage('Error checking authentication', 'error');
-            }
-
-            // Listen for auth changes
-            supabaseClient.auth.onAuthStateChange((event, session) => {
-                console.log('Auth state changed:', event);
-                
-                if (session) {
-                    currentUser = session.user;
-                    updateUIForLoggedInUser();
-                } else {
-                    currentUser = null;
-                    updateUIForLoggedOutUser();
-                }
-            });
-        }
-
-        // Sign up function
-        async function signUp() {
+        // Sign up function (demo version)
+        function signUp() {
             console.log('Sign up clicked');
             
             const name = document.getElementById('signupName').value.trim();
@@ -488,39 +617,33 @@
                 return;
             }
 
-            try {
-                console.log('Attempting to sign up user...');
-                
-                const { data, error } = await supabaseClient.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: {
-                        data: {
-                            full_name: name
-                        }
-                    }
-                });
-
-                if (error) {
-                    console.error('Signup error:', error);
-                    showMessage('Signup failed: ' + error.message, 'error');
-                } else {
-                    console.log('Signup successful:', data);
-                    showMessage('Account created successfully! You can now sign in.', 'success');
-                    
-                    // Clear form
-                    document.getElementById('signupName').value = '';
-                    document.getElementById('signupEmail').value = '';
-                    document.getElementById('signupPassword').value = '';
-                }
-            } catch (err) {
-                console.error('Unexpected error during signup:', err);
-                showMessage('An unexpected error occurred. Please try again.', 'error');
+            // Check if user already exists
+            if (users.find(user => user.email === email)) {
+                showMessage('An account with this email already exists', 'error');
+                return;
             }
+
+            // Create new user
+            const newUser = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                password: password
+            };
+
+            users.push(newUser);
+            showMessage('Account created successfully! You can now sign in.', 'success');
+            
+            // Clear form
+            document.getElementById('signupName').value = '';
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+
+            console.log('Demo user created:', newUser);
         }
 
-        // Sign in function
-        async function signIn() {
+        // Sign in function (demo version)
+        function signIn() {
             console.log('Sign in clicked');
             
             const email = document.getElementById('signinEmail').value.trim();
@@ -531,46 +654,32 @@
                 return;
             }
 
-            try {
-                console.log('Attempting to sign in user...');
-                
-                const { data, error } = await supabaseClient.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
+            // Find user
+            const user = users.find(u => u.email === email && u.password === password);
 
-                if (error) {
-                    console.error('Signin error:', error);
-                    showMessage('Sign in failed: ' + error.message, 'error');
-                } else {
-                    console.log('Signin successful:', data);
-                    showMessage('Welcome back!', 'success');
-                    
-                    // Clear form
-                    document.getElementById('signinEmail').value = '';
-                    document.getElementById('signinPassword').value = '';
-                }
-            } catch (err) {
-                console.error('Unexpected error during signin:', err);
-                showMessage('An unexpected error occurred. Please try again.', 'error');
+            if (!user) {
+                showMessage('Invalid email or password', 'error');
+                return;
             }
+
+            // Log in user
+            currentUser = user;
+            showMessage('Welcome back, ' + user.name + '!', 'success');
+            updateUIForLoggedInUser();
+            
+            // Clear form
+            document.getElementById('signinEmail').value = '';
+            document.getElementById('signinPassword').value = '';
+
+            console.log('Demo user signed in:', user);
         }
 
         // Sign out function
-        async function signOut() {
-            try {
-                const { error } = await supabaseClient.auth.signOut();
-                
-                if (error) {
-                    console.error('Signout error:', error);
-                    showMessage('Error signing out: ' + error.message, 'error');
-                } else {
-                    showMessage('Successfully signed out', 'success');
-                }
-            } catch (err) {
-                console.error('Unexpected error during signout:', err);
-                showMessage('An unexpected error occurred. Please try again.', 'error');
-            }
+        function signOut() {
+            currentUser = null;
+            showMessage('Successfully signed out', 'success');
+            updateUIForLoggedOutUser();
+            console.log('User signed out');
         }
 
         // Update UI for logged-in user
@@ -584,15 +693,10 @@
             userInfo.classList.add('show');
             authForms.classList.add('hide');
             addListingBtn.classList.add('show');
-            addListingBtn.textContent = '+ Add Listing';
 
             // Set user name
-            if (currentUser && currentUser.user_metadata && currentUser.user_metadata.full_name) {
-                userName.textContent = currentUser.user_metadata.full_name;
-            } else if (currentUser && currentUser.email) {
-                userName.textContent = currentUser.email.split('@')[0];
-            } else {
-                userName.textContent = 'User';
+            if (currentUser) {
+                userName.textContent = currentUser.name;
             }
         }
 
@@ -620,6 +724,57 @@
                 }, 5000);
             }
         }
+
+        // Modal functions
+        function showAddListingModal() {
+            if (!currentUser) {
+                showMessage('Please sign in to add a listing', 'error');
+                return;
+            }
+            document.getElementById('addListingModal').classList.add('show');
+        }
+
+        function hideAddListingModal() {
+            document.getElementById('addListingModal').classList.remove('show');
+            document.getElementById('addListingForm').reset();
+        }
+
+        // Add listing form submission
+        document.getElementById('addListingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                showMessage('Please sign in to add a listing', 'error');
+                return;
+            }
+
+            // Get form data
+            const formData = {
+                productName: document.getElementById('productName').value,
+                category: document.getElementById('category').value,
+                price: document.getElementById('price').value,
+                quantity: document.getElementById('quantity').value,
+                unit: document.getElementById('unit').value,
+                description: document.getElementById('description').value,
+                location: document.getElementById('location').value,
+                harvestDate: document.getElementById('harvestDate').value,
+                contactPhone: document.getElementById('contactPhone').value,
+                contactEmail: document.getElementById('contactEmail').value,
+                owner: currentUser.name
+            };
+
+            // In a real app, you'd save this to a database
+            console.log('New listing (demo):', formData);
+            showMessage('Listing added successfully! (Demo mode)', 'success');
+            hideAddListingModal();
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('addListingModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideAddListingModal();
+            }
+        });
     </script>
 </body>
 </html>

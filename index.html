@@ -22,17 +22,55 @@
             color: white;
             padding: 1rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .header h1 {
+        .header-left h1 {
             font-size: 1.8rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
-        .header p {
+        .header-left p {
             opacity: 0.9;
             font-size: 0.9rem;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .user-email {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .auth-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .auth-btn:hover {
+            background: rgba(255,255,255,0.3);
         }
 
         .search-container {
@@ -119,10 +157,22 @@
             padding: 1rem;
             cursor: pointer;
             transition: background 0.2s;
+            position: relative;
         }
 
         .listing-card:hover {
             background: #f8fafc;
+        }
+
+        .listing-owner {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #22c55e;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
         }
 
         .listing-title {
@@ -243,21 +293,66 @@
             color: #6b7280;
         }
 
-        .api-status {
-            background: #fef3c7;
-            border: 1px solid #f59e0b;
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 1rem;
-            color: #92400e;
+        .auth-switch {
+            text-align: center;
+            margin-top: 1rem;
+            color: #6b7280;
         }
 
-        .api-status h3 {
-            margin-bottom: 0.5rem;
-            color: #78350f;
+        .auth-switch a {
+            color: #22c55e;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .success-message {
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+            color: #16a34a;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .auth-required {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+        }
+
+        .auth-required button {
+            background: #22c55e;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
         }
 
         @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
             .main-content {
                 flex-direction: column;
             }
@@ -284,28 +379,28 @@
 </head>
 <body>
     <header class="header">
-        <h1>🥬 HarvestDate</h1>
-        <p>Find fresh, local produce directly from growers in your area</p>
+        <div class="header-left">
+            <h1>🥬 HarvestDate</h1>
+            <p>Find fresh, local produce directly from growers in your area</p>
+        </div>
+        <div class="header-right" id="headerAuth">
+            <!-- Auth content will be populated here -->
+        </div>
     </header>
 
     <div class="search-container">
         <div class="search-form">
             <input type="text" class="search-input" id="searchInput" placeholder="Search for tomatoes, apples, herbs...">
             <button class="search-btn" onclick="searchProducts()">Search</button>
-            <button class="add-listing-btn" onclick="openAddListingModal()">+ Add Listing</button>
+            <button class="add-listing-btn" id="addListingBtn" onclick="checkAuthAndAddListing()">+ Add Listing</button>
         </div>
-    </div>
-
-    <div id="mapStatus" class="api-status" style="display: none;">
-        <h3>🗺️ Loading Google Maps...</h3>
-        <p>Billing is now enabled! Maps should load within 2-5 minutes. <button onclick="location.reload()" style="background: #22c55e; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Refresh Page</button></p>
     </div>
 
     <div class="main-content">
         <div class="sidebar">
             <div class="sidebar-header">
                 <h3>Available Products</h3>
-                <span id="resultCount">3 items</span>
+                <span id="resultCount">0 items</span>
             </div>
             <div id="listingsList">
                 <!-- Products will be populated here -->
@@ -315,6 +410,76 @@
         <div class="map-container">
             <div id="map">
                 <div>📍 Interactive Map Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="authModalTitle">Welcome to HarvestDate</h2>
+                <button class="close-btn" onclick="closeAuthModal()">&times;</button>
+            </div>
+            
+            <div id="authError" class="error-message" style="display: none;"></div>
+            <div id="authSuccess" class="success-message" style="display: none;"></div>
+            
+            <!-- Login Form -->
+            <div id="loginForm">
+                <form id="loginFormElement">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="loginEmail" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="loginPassword" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Sign In</button>
+                </form>
+                
+                <div class="auth-switch">
+                    Don't have an account? <a href="#" onclick="showRegisterForm()">Sign up here</a>
+                </div>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="registerForm" style="display: none;">
+                <form id="registerFormElement">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-input" id="registerName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="registerEmail" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="registerPassword" required minlength="6">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Location (City, State)</label>
+                        <input type="text" class="form-input" id="registerLocation" placeholder="e.g., Tacoma, WA" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" class="form-input" id="registerPhone" placeholder="(555) 123-4567">
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Create Account</button>
+                </form>
+                
+                <div class="auth-switch">
+                    Already have an account? <a href="#" onclick="showLoginForm()">Sign in here</a>
+                </div>
             </div>
         </div>
     </div>
@@ -379,8 +544,25 @@
         </div>
     </div>
 
+    <!-- Supabase JavaScript SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script>
-        // Sample data for demonstration
+        // Supabase configuration
+        const SUPABASE_URL = 'https://bgyoonkfzrjbiypgliom.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJneW9vbmtmenJqYml5cGdsaWhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyNzE4OTYsImV4cCI6MjA2NTg0Nzg5Nn0.xi_zPeMAnHQZ4BF6BUa-1_nYCzajtRZL1gyS1ZePUAI';
+        
+        // Initialize Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Global variables
+        let map;
+        let markers = [];
+        let filteredProducts = [];
+        let mapsLoaded = false;
+        let currentUser = null;
+
+        // Sample data for demonstration (will be replaced with database data)
         let products = [
             {
                 id: 1,
@@ -393,7 +575,9 @@
                 location: "Tacoma, WA",
                 contact: "555-0123",
                 lat: 47.2529,
-                lng: -122.4443
+                lng: -122.4443,
+                userId: "demo-user-1",
+                userName: "Demo Farmer"
             },
             {
                 id: 2,
@@ -406,7 +590,9 @@
                 location: "Puyallup, WA",
                 contact: "555-0456",
                 lat: 47.1856,
-                lng: -122.3126
+                lng: -122.3126,
+                userId: "demo-user-2",
+                userName: "Herb Garden Co"
             },
             {
                 id: 3,
@@ -419,31 +605,177 @@
                 location: "Auburn, WA",
                 contact: "555-0789",
                 lat: 47.3073,
-                lng: -122.2284
+                lng: -122.2284,
+                userId: "demo-user-3",
+                userName: "Valley Orchards"
             }
         ];
 
-        let map;
-        let markers = [];
-        let filteredProducts = products;
-        let mapsLoaded = false;
-
         // Initialize the app
-        function initApp() {
+        async function initApp() {
+            // Check for existing session
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                currentUser = session.user;
+                updateAuthUI();
+            }
+
+            // Listen for auth changes
+            supabase.auth.onAuthStateChange(async (event, session) => {
+                if (event === 'SIGNED_IN' && session) {
+                    currentUser = session.user;
+                    updateAuthUI();
+                    closeAuthModal();
+                    showSuccess('Welcome to HarvestDate!');
+                } else if (event === 'SIGNED_OUT') {
+                    currentUser = null;
+                    updateAuthUI();
+                }
+            });
+
+            filteredProducts = products;
             updateSidebar(products);
+            updateAuthUI();
             
             // Try to load Google Maps
             if (typeof google !== 'undefined' && google.maps) {
                 initGoogleMaps();
             } else {
-                showMapStatus();
                 // Fallback: show a simple placeholder map
                 initPlaceholderMap();
             }
         }
 
-        function showMapStatus() {
-            document.getElementById('mapStatus').style.display = 'block';
+        // Update authentication UI
+        function updateAuthUI() {
+            const headerAuth = document.getElementById('headerAuth');
+            
+            if (currentUser) {
+                headerAuth.innerHTML = `
+                    <div class="user-info">
+                        <div class="user-name">Welcome, ${currentUser.user_metadata?.full_name || currentUser.email}</div>
+                        <div class="user-email">${currentUser.email}</div>
+                    </div>
+                    <button class="auth-btn" onclick="signOut()">Sign Out</button>
+                `;
+            } else {
+                headerAuth.innerHTML = `
+                    <button class="auth-btn" onclick="openAuthModal('login')">Sign In</button>
+                    <button class="auth-btn" onclick="openAuthModal('register')">Sign Up</button>
+                `;
+            }
+        }
+
+        // Authentication functions
+        function openAuthModal(mode = 'login') {
+            document.getElementById('authModal').style.display = 'block';
+            if (mode === 'register') {
+                showRegisterForm();
+            } else {
+                showLoginForm();
+            }
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+            clearAuthMessages();
+        }
+
+        function showLoginForm() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('authModalTitle').textContent = 'Sign In';
+            clearAuthMessages();
+        }
+
+        function showRegisterForm() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('authModalTitle').textContent = 'Create Account';
+            clearAuthMessages();
+        }
+
+        function clearAuthMessages() {
+            document.getElementById('authError').style.display = 'none';
+            document.getElementById('authSuccess').style.display = 'none';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('authError');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('authSuccess');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        // Login form handler
+        document.getElementById('loginFormElement').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearAuthMessages();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            });
+            
+            if (error) {
+                showError(error.message);
+            }
+        });
+
+        // Register form handler
+        document.getElementById('registerFormElement').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearAuthMessages();
+            
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const location = document.getElementById('registerLocation').value;
+            const phone = document.getElementById('registerPhone').value;
+            
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: {
+                        full_name: name,
+                        location: location,
+                        phone: phone
+                    }
+                }
+            });
+            
+            if (error) {
+                showError(error.message);
+            } else {
+                showSuccess('Account created successfully! Please sign in.');
+                setTimeout(() => showLoginForm(), 2000);
+            }
+        });
+
+        // Sign out function
+        async function signOut() {
+            const { error } = await supabase.auth.signOut();
+            if (error) {
+                console.error('Error signing out:', error);
+            }
+        }
+
+        // Check authentication before adding listing
+        function checkAuthAndAddListing() {
+            if (!currentUser) {
+                openAuthModal('login');
+                return;
+            }
+            openAddListingModal();
         }
 
         function initPlaceholderMap() {
@@ -485,10 +817,8 @@
                 });
                 mapsLoaded = true;
                 displayProductsOnMap(products);
-                document.getElementById('mapStatus').style.display = 'none';
             } catch (error) {
                 console.log('Google Maps not available:', error);
-                showMapStatus();
                 initPlaceholderMap();
             }
         }
@@ -517,6 +847,7 @@
                             <div style="color: #22c55e; font-weight: 700; font-size: 1.1em;">${product.price}</div>
                             <div style="font-size: 0.8em; color: #666; margin-top: 8px;">
                                 Harvest: ${formatDate(product.harvestDate)}<br>
+                                Seller: ${product.userName}<br>
                                 Contact: ${product.contact}
                             </div>
                         </div>
@@ -545,10 +876,11 @@
 
             listingsList.innerHTML = productsToShow.map(product => `
                 <div class="listing-card" onclick="focusOnProduct(${product.id})">
+                    ${product.userId === currentUser?.id ? '<div class="listing-owner">Your Listing</div>' : ''}
                     <div class="listing-title">${product.name}</div>
                     <div class="listing-details">${product.description}</div>
                     <div class="listing-price">${product.price}</div>
-                    <div class="listing-distance">📍 ${product.location} • Harvest: ${formatDate(product.harvestDate)}</div>
+                    <div class="listing-distance">📍 ${product.location} • Harvest: ${formatDate(product.harvestDate)} • By: ${product.userName}</div>
                 </div>
             `).join('');
         }
@@ -605,6 +937,11 @@
         document.getElementById('addListingForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            if (!currentUser) {
+                alert('Please sign in to add a listing.');
+                return;
+            }
+            
             const formData = {
                 name: document.getElementById('productName').value,
                 category: document.getElementById('category').value,
@@ -621,7 +958,9 @@
                 id: products.length + 1,
                 ...formData,
                 lat: 47.2529 + (Math.random() - 0.5) * 0.2,
-                lng: -122.4443 + (Math.random() - 0.5) * 0.2
+                lng: -122.4443 + (Math.random() - 0.5) * 0.2,
+                userId: currentUser.id,
+                userName: currentUser.user_metadata?.full_name || currentUser.email
             };
 
             products.push(newProduct);
@@ -653,8 +992,13 @@
 
         // Close modal when clicking outside
         window.addEventListener('click', function(e) {
-            const modal = document.getElementById('addListingModal');
-            if (e.target === modal) {
+            const authModal = document.getElementById('authModal');
+            const addListingModal = document.getElementById('addListingModal');
+            
+            if (e.target === authModal) {
+                closeAuthModal();
+            }
+            if (e.target === addListingModal) {
                 closeAddListingModal();
             }
         });

@@ -476,6 +476,10 @@
                 map = new google.maps.Map(document.getElementById('map'), {
                     center: { lat: 47.5, lng: -120.5 },
                     zoom: 7,
+                    zoomControl: true,              // Enable zoom buttons
+                    scrollwheel: true,              // Enable mouse wheel zoom
+                    disableDoubleClickZoom: false,  // Enable double-click zoom
+                    gestureHandling: 'auto',        // Enable all gestures
                     mapTypeControl: true,
                     streetViewControl: false,
                     fullscreenControl: true,

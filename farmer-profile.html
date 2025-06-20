@@ -31,12 +31,44 @@
             text-align: center;
         }
 
-        .header-content h1 {
+        .nav-link {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-left {
+            flex: 1;
+        }
+
+        .header-left h1 {
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
         }
 
-        .header-content p {
+        .header-left p {
             font-size: 1.2rem;
             opacity: 0.9;
         }
@@ -440,8 +472,15 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <h1>🌱 Farmer Dashboard</h1>
-                <p>Manage your growing locations and harvest planning</p>
+                <div class="header-left">
+                    <h1>🌱 Farmer Dashboard</h1>
+                    <p>Manage your growing locations and harvest planning</p>
+                </div>
+                <div class="header-right">
+                    <a href="index.html" class="nav-link">
+                        🗺️ View Marketplace
+                    </a>
+                </div>
             </div>
         </div>
     </header>

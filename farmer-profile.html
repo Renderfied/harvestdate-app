@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HarvestDate - Farmer Profile</title>
+    <title>Plan Harvest - Create Marketplace Listing</title>
     <style>
         * {
             margin: 0;
@@ -12,1052 +12,387 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: #f5f5f5;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        header {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
             color: white;
-            padding: 2rem 0;
+            padding: 30px;
             text-align: center;
         }
 
-        .nav-link {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            text-decoration: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+        .form-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
         }
 
-        .nav-link:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .header-left {
-            flex: 1;
-        }
-
-        .header-left h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .header-left p {
-            font-size: 1.2rem;
+        .form-header p {
+            font-size: 1.1em;
             opacity: 0.9;
         }
 
-        .nav-tabs {
-            background: white;
-            border-bottom: 3px solid #667eea;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            gap: 0;
+        .form-content {
+            padding: 40px;
         }
 
-        .nav-tab {
-            background: #f8f9fa;
-            color: #666;
-            border: none;
-            padding: 1rem 2rem;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.3s;
-            border-bottom: 3px solid transparent;
-        }
-
-        .nav-tab:hover {
-            background: #e9ecef;
-            color: #333;
-        }
-
-        .nav-tab.active {
-            background: white;
-            color: #667eea;
-            border-bottom: 3px solid #667eea;
-        }
-
-        .main-content {
-            padding: 2rem 0;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .dashboard-grid {
+        .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card h3 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #27ae60;
-            margin: 0.5rem 0;
-        }
-
-        .btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            margin: 0.25rem;
-        }
-
-        .btn:hover {
-            background: #5a67d8;
-            transform: translateY(-2px);
-        }
-
-        .btn-success {
-            background: #27ae60;
-        }
-
-        .btn-success:hover {
-            background: #229954;
-        }
-
-        .btn-warning {
-            background: #f39c12;
-        }
-
-        .btn-warning:hover {
-            background: #e67e22;
-        }
-
-        .btn-danger {
-            background: #e74c3c;
-        }
-
-        .btn-danger:hover {
-            background: #c0392b;
-        }
-
-        .locations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-
-        .location-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .location-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(45deg, #27ae60, #2ecc71);
-        }
-
-        .location-header {
-            display: flex;
-            justify-content: between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .location-title {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-
-        .location-size {
-            color: #666;
-            font-size: 0.9rem;
-            margin: 0.25rem 0;
-        }
-
-        .crops-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin: 1rem 0;
-        }
-
-        .crop-tag {
-            background: #e8f5e8;
-            color: #27ae60;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .harvest-timeline {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1rem;
-        }
-
-        .timeline-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .timeline-item:last-child {
-            border-bottom: none;
-        }
-
-        .timeline-crop {
-            font-weight: 500;
-        }
-
-        .timeline-date {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #666;
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 25px;
         }
 
-        .form-group label {
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 600;
             color: #2c3e50;
+            font-size: 0.95em;
         }
 
-        .form-group input, .form-group textarea, .form-group select {
+        input, select, textarea {
             width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
+            padding: 12px 15px;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
         }
 
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: #667eea;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .calendar {
+            border-color: #4CAF50;
             background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
         }
 
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
+        textarea {
+            resize: vertical;
+            min-height: 100px;
         }
 
-        .calendar-nav {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 0.5rem;
-        }
-
-        .calendar-day {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
+        .price-input {
             position: relative;
         }
 
-        .calendar-day:hover {
-            background: #f0f4ff;
-        }
-
-        .calendar-day.has-harvest {
-            background: #e8f5e8;
-            color: #27ae60;
-            font-weight: bold;
-        }
-
-        .calendar-day.today {
-            background: #667eea;
-            color: white;
-        }
-
-        .analytics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .metric-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-        }
-
-        .metric-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #667eea;
-            margin: 0.5rem 0;
-        }
-
-        .metric-label {
+        .price-input::before {
+            content: '$';
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
             color: #666;
-            font-size: 0.9rem;
+            font-weight: bold;
+            pointer-events: none;
         }
 
-        .progress-bar {
-            background: #f0f0f0;
+        .price-input input {
+            padding-left: 35px;
+        }
+
+        .contact-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .contact-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 30px auto 0;
+            min-width: 200px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.9em;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
             border-radius: 10px;
-            height: 10px;
-            margin: 1rem 0;
-            overflow: hidden;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            display: none;
         }
 
-        .progress-fill {
-            background: linear-gradient(45deg, #27ae60, #2ecc71);
-            height: 100%;
-            transition: width 0.3s;
+        .help-text {
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-top: 5px;
         }
 
         @media (max-width: 768px) {
-            .dashboard-grid, .form-row {
+            .form-grid {
                 grid-template-columns: 1fr;
             }
             
-            .nav-tabs {
-                flex-wrap: wrap;
+            .form-content {
+                padding: 20px;
             }
             
-            .nav-tab {
-                flex: 1;
-                min-width: 120px;
+            .form-header {
+                padding: 20px;
+            }
+            
+            .form-header h1 {
+                font-size: 2em;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="header-left">
-                    <h1>🌱 Farmer Dashboard</h1>
-                    <p>Manage your growing locations and harvest planning</p>
-                </div>
-                <div class="header-right">
-                    <a href="index.html" class="nav-link">
-                        🗺️ View Marketplace
-                    </a>
-                </div>
-            </div>
+    <div class="form-container">
+        <div class="form-header">
+            <h1>🌱 Plan Your Harvest</h1>
+            <p>Create a marketplace listing for your upcoming harvest</p>
         </div>
-    </header>
 
-    <nav class="nav-tabs">
-        <button class="nav-tab active" onclick="showTab('dashboard')">📊 Dashboard</button>
-        <button class="nav-tab" onclick="showTab('locations')">🗺️ Locations</button>
-        <button class="nav-tab" onclick="showTab('planning')">📅 Planning</button>
-        <button class="nav-tab" onclick="showTab('analytics')">📈 Analytics</button>
-    </nav>
-
-    <div class="container">
-        <div class="main-content">
-            <!-- Dashboard Tab -->
-            <div id="dashboard" class="tab-content active">
-                <div class="dashboard-grid">
-                    <div class="card">
-                        <h3>🌾 Active Growing Locations</h3>
-                        <div class="stat-number">4</div>
-                        <p>Locations currently in production</p>
-                        <button class="btn btn-success" onclick="showAddLocationModal()">Add New Location</button>
-                    </div>
-                    
-                    <div class="card">
-                        <h3>📦 Upcoming Harvests</h3>
-                        <div class="stat-number">12</div>
-                        <p>Crops ready within 30 days</p>
-                        <button class="btn" onclick="showTab('planning')">View Calendar</button>
-                    </div>
-                    
-                    <div class="card">
-                        <h3>💰 Monthly Revenue</h3>
-                        <div class="stat-number">$3,240</div>
-                        <p>This month's earnings</p>
-                        <button class="btn" onclick="showTab('analytics')">View Details</button>
-                    </div>
-                    
-                    <div class="card">
-                        <h3>⚠️ Action Items</h3>
-                        <div class="stat-number">3</div>
-                        <p>Tasks requiring attention</p>
-                        <ul style="margin-top: 1rem; text-align: left;">
-                            <li>🍅 Tomatoes ready for harvest</li>
-                            <li>🥬 Lettuce needs watering</li>
-                            <li>🌿 Update herb prices</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Locations Tab -->
-            <div id="locations" class="tab-content">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <h2>🗺️ Growing Locations</h2>
-                    <button class="btn btn-success" onclick="showAddLocationModal()">+ Add New Location</button>
-                </div>
-                
-                <div class="locations-grid" id="locationsGrid">
-                    <!-- Sample locations will be populated here -->
-                </div>
-            </div>
-
-            <!-- Planning Tab -->
-            <div id="planning" class="tab-content">
-                <h2>📅 Harvest Planning Calendar</h2>
-                <p style="margin-bottom: 2rem; color: #666;">Plan your planting and harvest schedules across all locations</p>
-                
-                <div class="calendar">
-                    <div class="calendar-header">
-                        <button class="calendar-nav" onclick="changeMonth(-1)">‹ Previous</button>
-                        <h3 id="currentMonth">December 2024</h3>
-                        <button class="calendar-nav" onclick="changeMonth(1)">Next ›</button>
-                    </div>
-                    
-                    <div class="calendar-grid" id="calendarGrid">
-                        <!-- Calendar will be populated here -->
-                    </div>
-                </div>
-                
-                <div class="harvest-timeline">
-                    <h3>🌱 Upcoming Harvests</h3>
-                    <div class="timeline-item">
-                        <span class="timeline-crop">🍅 Cherry Tomatoes</span>
-                        <span class="timeline-date">Dec 22, 2024</span>
-                    </div>
-                    <div class="timeline-item">
-                        <span class="timeline-crop">🥬 Buttercrunch Lettuce</span>
-                        <span class="timeline-date">Dec 25, 2024</span>
-                    </div>
-                    <div class="timeline-item">
-                        <span class="timeline-crop">🥕 Rainbow Carrots</span>
-                        <span class="timeline-date">Jan 5, 2025</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Analytics Tab -->
-            <div id="analytics" class="tab-content">
-                <h2>📈 Farm Analytics</h2>
-                <p style="margin-bottom: 2rem; color: #666;">Track your farm's performance and productivity</p>
-                
-                <div class="analytics-grid">
-                    <div class="metric-card">
-                        <div class="metric-value">87%</div>
-                        <div class="metric-label">Land Utilization</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 87%;"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="metric-card">
-                        <div class="metric-value">24</div>
-                        <div class="metric-label">Crop Varieties</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 75%;"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="metric-card">
-                        <div class="metric-value">156</div>
-                        <div class="metric-label">Active Plants</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 92%;"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="metric-card">
-                        <div class="metric-value">$48.30</div>
-                        <div class="metric-label">Avg Revenue/Plant</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 68%;"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card" style="margin-top: 2rem;">
-                    <h3>🏆 Performance Insights</h3>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
-                            <strong>Top Performer:</strong> Field A - $1,240 revenue this month
-                        </li>
-                        <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
-                            <strong>Most Popular:</strong> Cherry tomatoes - 89% sell-through rate
-                        </li>
-                        <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
-                            <strong>Seasonal Opportunity:</strong> Winter herbs showing high demand
-                        </li>
-                        <li style="padding: 0.5rem 0;">
-                            <strong>Optimization:</strong> Consider expanding lettuce production by 25%
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Location Modal -->
-    <div class="modal" id="addLocationModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>🗺️ Add New Growing Location</h3>
-                <button class="close-btn" onclick="hideAddLocationModal()">&times;</button>
-            </div>
+        <div class="form-content">
+            <button class="back-btn" onclick="history.back()">← Back to Dashboard</button>
             
-            <form id="addLocationForm">
-                <div class="form-group">
-                    <label for="locationName">Location Name *</label>
-                    <input type="text" id="locationName" placeholder="e.g., Field A, Greenhouse 2, North Plot" required>
-                </div>
-                
-                <div class="form-row">
+            <div class="success-message" id="successMessage">
+                ✅ Harvest plan created successfully! Your listing will appear on the marketplace.
+            </div>
+
+            <form id="harvestForm">
+                <div class="form-grid">
                     <div class="form-group">
-                        <label for="locationType">Location Type *</label>
-                        <select id="locationType" required>
-                            <option value="">Select Type</option>
-                            <option value="field">🌾 Open Field</option>
-                            <option value="greenhouse">🏠 Greenhouse</option>
-                            <option value="hydroponic">💧 Hydroponic System</option>
-                            <option value="garden">🌻 Garden Bed</option>
-                            <option value="orchard">🍎 Orchard</option>
+                        <label for="cropType">Crop Type *</label>
+                        <select id="cropType" required>
+                            <option value="">Select crop type</option>
+                            <option value="Tomatoes">🍅 Tomatoes</option>
+                            <option value="Lettuce">🥬 Lettuce</option>
+                            <option value="Carrots">🥕 Carrots</option>
+                            <option value="Peppers">🌶️ Peppers</option>
+                            <option value="Onions">🧅 Onions</option>
+                            <option value="Potatoes">🥔 Potatoes</option>
+                            <option value="Spinach">🥬 Spinach</option>
+                            <option value="Broccoli">🥦 Broccoli</option>
+                            <option value="Corn">🌽 Corn</option>
+                            <option value="Beans">🫘 Beans</option>
+                            <option value="Squash">🎃 Squash</option>
+                            <option value="Cucumbers">🥒 Cucumbers</option>
+                            <option value="Other">Other</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
-                        <label for="locationSize">Size (acres) *</label>
-                        <input type="number" id="locationSize" step="0.1" min="0.1" placeholder="e.g., 2.5" required>
+                        <label for="customCrop">Custom Crop (if Other)</label>
+                        <input type="text" id="customCrop" placeholder="Enter crop name">
                     </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="locationAddress">Address/Location *</label>
-                    <input type="text" id="locationAddress" placeholder="Farm address or GPS coordinates" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="soilType">Soil Type</label>
-                    <select id="soilType">
-                        <option value="">Select Soil Type</option>
-                        <option value="clay">Clay</option>
-                        <option value="sandy">Sandy</option>
-                        <option value="loam">Loam</option>
-                        <option value="silt">Silt</option>
-                        <option value="peat">Peat</option>
-                        <option value="chalk">Chalk</option>
-                    </select>
-                </div>
-                
-                <div class="form-row">
+
                     <div class="form-group">
-                        <label for="sunExposure">Sun Exposure</label>
-                        <select id="sunExposure">
-                            <option value="">Select Exposure</option>
-                            <option value="full">Full Sun (6+ hours)</option>
-                            <option value="partial">Partial Sun (4-6 hours)</option>
-                            <option value="shade">Shade (< 4 hours)</option>
+                        <label for="quantity">Estimated Quantity *</label>
+                        <input type="number" id="quantity" required min="1" placeholder="50">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="unit">Unit *</label>
+                        <select id="unit" required>
+                            <option value="">Select unit</option>
+                            <option value="lbs">Pounds (lbs)</option>
+                            <option value="kg">Kilograms (kg)</option>
+                            <option value="bunches">Bunches</option>
+                            <option value="heads">Heads</option>
+                            <option value="bags">Bags</option>
+                            <option value="boxes">Boxes</option>
+                            <option value="pieces">Pieces</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
-                        <label for="waterSource">Water Source</label>
-                        <select id="waterSource">
-                            <option value="">Select Water Source</option>
-                            <option value="well">Well Water</option>
-                            <option value="municipal">Municipal Water</option>
-                            <option value="rainwater">Rainwater Collection</option>
-                            <option value="irrigation">Irrigation System</option>
-                            <option value="pond">Pond/Stream</option>
-                        </select>
+                        <label for="harvestDate">Expected Harvest Date *</label>
+                        <input type="date" id="harvestDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pricePerUnit">Price per Unit *</label>
+                        <div class="price-input">
+                            <input type="number" id="pricePerUnit" required min="0" step="0.01" placeholder="3.50">
+                        </div>
+                        <div class="help-text">Price per pound, kilogram, bunch, etc.</div>
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="currentCrops">Current/Planned Crops</label>
-                    <textarea id="currentCrops" rows="3" placeholder="List the crops you're growing or planning to grow here..."></textarea>
+
+                <div class="form-group full-width">
+                    <label for="description">Description</label>
+                    <textarea id="description" placeholder="Tell buyers about your produce: growing methods, variety, freshness, pickup details, etc."></textarea>
                 </div>
-                
-                <div class="form-group">
-                    <label for="notes">Notes</label>
-                    <textarea id="notes" rows="3" placeholder="Any additional notes about this location..."></textarea>
+
+                <div class="form-group full-width">
+                    <label for="farmLocation">Farm Location *</label>
+                    <input type="text" id="farmLocation" required placeholder="Enter your farm address or nearest intersection">
+                    <div class="help-text">This will be displayed on the marketplace map</div>
                 </div>
-                
-                <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
-                    🌱 Add Growing Location
+
+                <div class="contact-section">
+                    <h3>📞 Contact Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="farmerName">Your Name *</label>
+                            <input type="text" id="farmerName" required placeholder="John Smith">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="farmName">Farm Name</label>
+                            <input type="text" id="farmName" placeholder="Smith Family Farm">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" required placeholder="(555) 123-4567">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" placeholder="farmer@example.com">
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="allowTexts" checked>
+                        <label for="allowTexts">Allow buyers to contact me via text message</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    🌱 Create Harvest Listing
                 </button>
             </form>
         </div>
     </div>
 
     <script>
-        // Sample locations data
-        let locations = [
-            {
-                id: 1,
-                name: "Field A - Main Vegetables",
-                type: "field",
-                size: "3.2",
-                address: "North Section, Heritage Farm",
-                soilType: "loam",
-                sunExposure: "full",
-                waterSource: "irrigation",
-                crops: ["Tomatoes", "Lettuce", "Carrots", "Peppers"],
-                notes: "Primary vegetable production area",
-                revenue: 1240,
-                plantCount: 89
-            },
-            {
-                id: 2,
-                name: "Greenhouse 1 - Herbs",
-                type: "greenhouse",
-                size: "0.5",
-                address: "East Side, Heritage Farm",
-                soilType: "peat",
-                sunExposure: "full",
-                waterSource: "municipal",
-                crops: ["Basil", "Oregano", "Thyme", "Cilantro"],
-                notes: "Climate controlled herb production",
-                revenue: 890,
-                plantCount: 45
-            },
-            {
-                id: 3,
-                name: "South Plot - Seasonal",
-                type: "field",
-                size: "1.8",
-                address: "South Section, Heritage Farm",
-                soilType: "sandy",
-                sunExposure: "partial",
-                waterSource: "well",
-                crops: ["Pumpkins", "Squash", "Corn"],
-                notes: "Seasonal rotation crops",
-                revenue: 650,
-                plantCount: 22
-            },
-            {
-                id: 4,
-                name: "Apple Orchard",
-                type: "orchard",
-                size: "2.0",
-                address: "West Side, Heritage Farm",
-                soilType: "loam",
-                sunExposure: "full",
-                waterSource: "rainwater",
-                crops: ["Honeycrisp Apples", "Gala Apples"],
-                notes: "Mature apple trees, established 2018",
-                revenue: 2100,
-                plantCount: 24
-            }
-        ];
-
-        // Current date for calendar
-        let currentDate = new Date();
-
-        // Initialize the dashboard
-        document.addEventListener('DOMContentLoaded', function() {
-            renderLocations();
-            renderCalendar();
-        });
-
-        // Tab navigation
-        function showTab(tabName) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Remove active class from all nav tabs
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Show selected tab content
-            document.getElementById(tabName).classList.add('active');
-            
-            // Add active class to clicked nav tab
-            event.target.classList.add('active');
-        }
-
-        // Render locations grid
-        function renderLocations() {
-            const grid = document.getElementById('locationsGrid');
-            
-            grid.innerHTML = locations.map(location => `
-                <div class="location-card">
-                    <div class="location-header">
-                        <div>
-                            <div class="location-title">${getLocationIcon(location.type)} ${location.name}</div>
-                            <div class="location-size">${location.size} acres • ${location.address}</div>
-                        </div>
-                    </div>
-                    
-                    <div class="crops-list">
-                        ${location.crops.map(crop => `<span class="crop-tag">${crop}</span>`).join('')}
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; font-size: 0.9rem;">
-                        <div><strong>Soil:</strong> ${location.soilType || 'N/A'}</div>
-                        <div><strong>Sun:</strong> ${location.sunExposure || 'N/A'}</div>
-                        <div><strong>Water:</strong> ${location.waterSource || 'N/A'}</div>
-                        <div><strong>Plants:</strong> ${location.plantCount}</div>
-                    </div>
-                    
-                    <div style="margin-top: 1rem;">
-                        <div style="font-weight: bold; color: #27ae60;">$${location.revenue} revenue this month</div>
-                        <p style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">${location.notes}</p>
-                    </div>
-                    
-                    <div style="margin-top: 1rem;">
-                        <button class="btn" onclick="editLocation(${location.id})">Edit</button>
-                        <button class="btn btn-warning" onclick="planHarvest(${location.id})">Plan Harvest</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Get location type icon
-        function getLocationIcon(type) {
-            const icons = {
-                field: '🌾',
-                greenhouse: '🏠',
-                hydroponic: '💧',
-                garden: '🌻',
-                orchard: '🍎'
-            };
-            return icons[type] || '🌱';
-        }
-
-        // Render calendar
-        function renderCalendar() {
-            const calendarGrid = document.getElementById('calendarGrid');
-            const monthElement = document.getElementById('currentMonth');
-            
-            const monthNames = ["January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"];
-            
-            monthElement.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
-            
-            // Get first day of month and number of days
-            const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-            const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-            const startDate = new Date(firstDay);
-            startDate.setDate(startDate.getDate() - firstDay.getDay());
-            
-            calendarGrid.innerHTML = '';
-            
-            // Add day headers
-            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            dayHeaders.forEach(day => {
-                const header = document.createElement('div');
-                header.textContent = day;
-                header.style.fontWeight = 'bold';
-                header.style.textAlign = 'center';
-                header.style.padding = '0.5rem';
-                header.style.color = '#666';
-                calendarGrid.appendChild(header);
-            });
-            
-            // Add calendar days
-            for (let i = 0; i < 42; i++) {
-                const cellDate = new Date(startDate);
-                cellDate.setDate(startDate.getDate() + i);
-                
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day';
-                dayElement.textContent = cellDate.getDate();
-                
-                // Highlight today
-                const today = new Date();
-                if (cellDate.toDateString() === today.toDateString()) {
-                    dayElement.classList.add('today');
-                }
-                
-                // Highlight harvest days (sample data)
-                const harvestDays = [22, 25, 28];
-                if (harvestDays.includes(cellDate.getDate()) && cellDate.getMonth() === currentDate.getMonth()) {
-                    dayElement.classList.add('has-harvest');
-                    dayElement.title = 'Harvest scheduled';
-                }
-                
-                // Dim days outside current month
-                if (cellDate.getMonth() !== currentDate.getMonth()) {
-                    dayElement.style.opacity = '0.3';
-                    dayElement.style.color = '#ccc';
-                }
-                
-                dayElement.onclick = () => selectDate(cellDate);
-                calendarGrid.appendChild(dayElement);
-            }
-        }
-
-        // Change calendar month
-        function changeMonth(direction) {
-            currentDate.setMonth(currentDate.getMonth() + direction);
-            renderCalendar();
-        }
-
-        // Select a date on calendar
-        function selectDate(date) {
-            alert(`Selected date: ${date.toDateString()}\n\nFeature coming soon:\n• Schedule planting\n• Plan harvest\n• Set reminders`);
-        }
-
-        // Modal functions
-        function showAddLocationModal() {
-            document.getElementById('addLocationModal').classList.add('show');
-        }
-
-        function hideAddLocationModal() {
-            document.getElementById('addLocationModal').classList.remove('show');
-            document.getElementById('addLocationForm').reset();
-        }
-
-        // Add location form submission
-        document.getElementById('addLocationForm').addEventListener('submit', function(e) {
+        document.getElementById('harvestForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Get form data
             const formData = {
-                id: Date.now(),
-                name: document.getElementById('locationName').value,
-                type: document.getElementById('locationType').value,
-                size: document.getElementById('locationSize').value,
-                address: document.getElementById('locationAddress').value,
-                soilType: document.getElementById('soilType').value,
-                sunExposure: document.getElementById('sunExposure').value,
-                waterSource: document.getElementById('waterSource').value,
-                crops: document.getElementById('currentCrops').value.split(',').map(crop => crop.trim()).filter(crop => crop),
-                notes: document.getElementById('notes').value,
-                revenue: 0,
-                plantCount: 0
+                id: Date.now(), // Unique ID
+                cropType: document.getElementById('cropType').value === 'Other' ? 
+                         document.getElementById('customCrop').value : 
+                         document.getElementById('cropType').value,
+                quantity: document.getElementById('quantity').value,
+                unit: document.getElementById('unit').value,
+                harvestDate: document.getElementById('harvestDate').value,
+                pricePerUnit: parseFloat(document.getElementById('pricePerUnit').value),
+                description: document.getElementById('description').value,
+                farmLocation: document.getElementById('farmLocation').value,
+                farmerName: document.getElementById('farmerName').value,
+                farmName: document.getElementById('farmName').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                allowTexts: document.getElementById('allowTexts').checked,
+                dateCreated: new Date().toISOString(),
+                status: 'available'
             };
 
-            // Add to locations array
-            locations.push(formData);
-            
-            // Re-render locations
-            renderLocations();
-            
-            // Close modal
-            hideAddLocationModal();
-            
+            // Save to localStorage (in a real app, this would go to a database)
+            let harvestListings = JSON.parse(localStorage.getItem('harvestListings') || '[]');
+            harvestListings.push(formData);
+            localStorage.setItem('harvestListings', JSON.stringify(harvestListings));
+
             // Show success message
-            alert(`✅ Location "${formData.name}" added successfully!\n\nYou can now:\n• Plan crops for this location\n• Schedule planting and harvests\n• Track performance`);
+            document.getElementById('successMessage').style.display = 'block';
             
-            // Update dashboard stats
-            updateDashboardStats();
+            // Reset form
+            document.getElementById('harvestForm').reset();
+            
+            // Scroll to top to show success message
+            window.scrollTo(0, 0);
+            
+            // Auto-hide success message after 5 seconds
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 5000);
         });
 
-        // Update dashboard statistics
-        function updateDashboardStats() {
-            const activeLocations = locations.length;
-            const totalRevenue = locations.reduce((sum, location) => sum + location.revenue, 0);
-            const totalPlants = locations.reduce((sum, location) => sum + location.plantCount, 0);
-            
-            // Update dashboard cards (if on dashboard tab)
-            console.log(`Updated stats: ${activeLocations} locations, ${totalRevenue} revenue, ${totalPlants} plants`);
-        }
+        // Set minimum date to today
+        document.getElementById('harvestDate').min = new Date().toISOString().split('T')[0];
 
-        // Edit location
-        function editLocation(locationId) {
-            const location = locations.find(l => l.id === locationId);
-            if (location) {
-                alert(`Edit Location: ${location.name}\n\nFeature coming soon:\n• Modify location details\n• Update crop information\n• Change growing parameters`);
-            }
-        }
-
-        // Plan harvest
-        function planHarvest(locationId) {
-            const location = locations.find(l => l.id === locationId);
-            if (location) {
-                alert(`Plan Harvest for: ${location.name}\n\nFeature coming soon:\n• Schedule harvest dates\n• Set quantity estimates\n• Notify potential buyers\n• Add to marketplace`);
-            }
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('addLocationModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                hideAddLocationModal();
+        // Show/hide custom crop field
+        document.getElementById('cropType').addEventListener('change', function() {
+            const customField = document.getElementById('customCrop').parentNode;
+            if (this.value === 'Other') {
+                customField.style.display = 'block';
+                document.getElementById('customCrop').required = true;
+            } else {
+                customField.style.display = 'none';
+                document.getElementById('customCrop').required = false;
             }
         });
-
-        // Sample data for demonstration
-        function loadSampleHarvestData() {
-            const sampleHarvests = [
-                { crop: "Cherry Tomatoes", date: "2024-12-22", location: "Field A", quantity: "50 lbs" },
-                { crop: "Buttercrunch Lettuce", date: "2024-12-25", location: "Field A", quantity: "25 heads" },
-                { crop: "Fresh Basil", date: "2024-12-28", location: "Greenhouse 1", quantity: "15 bunches" },
-                { crop: "Rainbow Carrots", date: "2025-01-05", location: "Field A", quantity: "30 bunches" },
-                { crop: "Winter Herbs", date: "2025-01-10", location: "Greenhouse 1", quantity: "40 bunches" }
-            ];
-            
-            return sampleHarvests;
-        }
-
-        // Advanced features placeholder functions
-        function generateReport() {
-            alert("📊 Advanced Reporting\n\nFeature coming soon:\n• Detailed analytics\n• Performance comparisons\n• Seasonal trends\n• Export data");
-        }
-
-        function setupNotifications() {
-            alert("🔔 Smart Notifications\n\nFeature coming soon:\n• Harvest reminders\n• Weather alerts\n• Market price updates\n• Buyer inquiries");
-        }
-
-        function integrateWeather() {
-            alert("🌤️ Weather Integration\n\nFeature coming soon:\n• Local weather forecasts\n• Growing condition alerts\n• Irrigation recommendations\n• Frost warnings");
-        }
-
-        // Initialize tooltips and help text
-        function initializeHelp() {
-            console.log("Farmer Profile Dashboard loaded successfully!");
-            console.log("Features available:");
-            console.log("✅ Location management");
-            console.log("✅ Harvest planning calendar");
-            console.log("✅ Performance analytics");
-            console.log("✅ Crop tracking");
-            console.log("🚧 Coming soon: Weather integration, notifications, detailed reporting");
-        }
-
-        // Run initialization
-        document.addEventListener('DOMContentLoaded', initializeHelp);
     </script>
 </body>
 </html>
